@@ -1,0 +1,6 @@
+select 
+	products.product_id
+from products
+where 
+	lower(products.low_fats)='y' 
+	and lower(products.recyclable)='y'; 
