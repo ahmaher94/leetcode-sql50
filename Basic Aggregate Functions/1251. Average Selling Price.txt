@@ -1,0 +1,12 @@
+select 
+    p.product_id, 
+    ifnull(round(sum(p.price*us.units) / sum(us.units), 2), 0) as average_price
+from 
+    prices p 
+    left join 
+    unitssold us
+on 
+    p.product_id = us.product_id
+    and us.purchase_date <= p.end_date and us.purchase_date >= p.start_date
+group by 
+    p.product_id;
