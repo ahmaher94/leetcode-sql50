@@ -1,0 +1,16 @@
+select 
+    q.query_name,
+    round(avg(q.rating/q.position), 2) as quality,
+    coalesce(
+        round(
+            sum(
+                case
+                    when q.rating < 3 then 1
+                end) 
+            / count(*) * 100, 2), 0) as poor_query_percentage
+from 
+    queries q
+where
+    q.query_name is not null
+group by
+    query_name;
