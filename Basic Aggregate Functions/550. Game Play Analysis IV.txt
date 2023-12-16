@@ -1,0 +1,30 @@
+with second_login as (
+    select 
+        player_id, 
+        event_date,
+        datediff(next_date, event_date) as second_day_diff,
+        min(event_date) over (partition by player_id) first_login
+    from
+        (
+            select 
+                player_id,
+                event_date,
+                lead(event_date, 1, -1) over (partition by player_id order by event_date) as next_date
+            from 
+                activity
+        ) as next_day_cal
+)
+
+select 
+    coalesce(
+        round(
+            sum(
+                case
+                    when event_date=first_login and second_day_diff=1 then 1 
+                end
+                ) / 
+            count(distinct player_id), 2
+            ), 0) as fraction
+from 
+    second_login
+;
