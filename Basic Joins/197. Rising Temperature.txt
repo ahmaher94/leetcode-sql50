@@ -1,0 +1,11 @@
+select 
+    w.id
+from
+    weather w
+    cross join 
+    weather we
+where
+    w.temperature > we.temperature
+    and 
+    datediff(w.recordDate, we.recordDate) = 1
+;
