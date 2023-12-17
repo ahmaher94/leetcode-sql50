@@ -1,0 +1,25 @@
+with employee_with_one_dept as(
+    select 
+        employee_id,
+        department_id
+    from 
+        employee
+    group by
+        employee_id
+    having 
+        count(*) = 1
+
+)
+select 
+    employee_id,
+    department_id
+from 
+    employee
+where 
+    primary_flag = 'Y'
+union
+select
+    *
+from
+    employee_with_one_dept
+;
