@@ -1,0 +1,38 @@
+with user_who_rated_the_highest_number as (
+    select 
+        u.name as results
+    from 
+        users u inner join movierating mr
+    on
+        u.user_id = mr.user_id
+    group by 
+        u.user_id
+    order by
+        count(*) desc, u.name asc
+    limit 1 
+
+),
+
+highest_avg_movie as (
+    select 
+        m.title
+    from 
+        movies m inner join movierating mm
+    on
+        m.movie_id = mm.movie_id
+    where 
+        date_format(created_at, '%m-%Y') = '02-2020'
+    group by
+        m.movie_id
+    order by 
+        avg(mm.rating) desc, m.title asc
+    limit
+        1
+
+)
+
+select * from user_who_rated_the_highest_number
+
+union all
+
+select * from highest_avg_movie
