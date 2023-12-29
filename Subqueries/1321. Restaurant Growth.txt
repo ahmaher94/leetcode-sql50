@@ -1,0 +1,31 @@
+with every_day_amount as(
+    select 
+        visited_on,
+        sum(amount) as amount
+    from 
+        customer
+    group by
+        visited_on
+    order by 
+        visited_on asc
+),
+sum_7_days as (
+    select
+        visited_on,
+        sum(amount) over (order by visited_on range between interval 6 day preceding and current row) as amount
+    from 
+        every_day_amount
+    order by 
+        visited_on asc
+)
+select
+    visited_on,
+    amount,
+    round(amount/7, 2) as average_amount
+from
+    sum_7_days
+where 
+    datediff(visited_on, (
+        select min(visited_on) from customer
+    )) >= 6
+;
