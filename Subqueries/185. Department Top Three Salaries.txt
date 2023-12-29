@@ -1,0 +1,21 @@
+with salaries_rank_for_each_dept as (
+    select 
+        id, 
+        name, 
+        salary,
+        departmentId,
+        dense_rank() over (partition by departmentId order by salary desc) as salary_rank
+    from 
+        employee
+)
+
+select 
+    d.name as Department,
+    e.name as Employee, 
+    e.salary as Salary
+from 
+    salaries_rank_for_each_dept e inner join department d
+    on e.departmentId = d.id
+where 
+    e.salary_rank <= 3
+;
