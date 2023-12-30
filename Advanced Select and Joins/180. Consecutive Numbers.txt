@@ -1,0 +1,16 @@
+with next_nums as (
+    select
+        num,
+        lead(num, 1) over() as next_num,
+        lead(num, 2) over() as next_next_num
+    from
+        logs
+)
+
+select
+    distinct(num) as ConsecutiveNums
+from
+    next_nums
+where
+    num = next_num and num = next_next_num
+;
