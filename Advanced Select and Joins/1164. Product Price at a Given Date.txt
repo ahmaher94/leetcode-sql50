@@ -1,0 +1,17 @@
+with each_product_until_day_16 as (
+    select
+        product_id,
+        first_value(new_price) over(partition by product_id order by change_date desc) as current_price
+    from
+        products
+    where 
+        change_date <= '2019-08-16'
+)
+
+select
+    distinct(p.product_id) as product_id,
+    coalesce(e.current_price, 10) as price
+from
+    products p left join each_product_until_day_16 e
+    on p.product_id = e.product_id
+;
