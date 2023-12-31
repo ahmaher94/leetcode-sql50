@@ -1,0 +1,19 @@
+with user_rank as (
+    select
+        id, 
+        email,
+        rank() over(partition by email order by id asc) as user_rank
+    from
+        person
+)
+
+delete from person
+where id in (
+    select 
+        id 
+    from
+        user_rank
+    where 
+        user_rank > 1
+)
+;
